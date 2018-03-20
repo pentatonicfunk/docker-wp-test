@@ -1,0 +1,5 @@
+#!/bin/bash
+source $HOME/.phpbrew/bashrc
+phpbrew init
+phpbrew list
+phpbrew switch 7.0.28

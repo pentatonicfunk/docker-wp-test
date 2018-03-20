@@ -1,0 +1,68 @@
+#Originally for wp plugin phpunit tests
+##Available packages
+- Multi PHP version using phpbrew : <http://phpbrew.github.io/phpbrew/>
+- PHP [5.2.17, 5.3.29, 5.4.45, 5.5.38, 5.6.34, 7.0.28, 7.1.15, 7.2.3]
+    - Default Installed Extension
+        - bcmath
+        - bz2
+        - calendar   
+        - cli
+        - ctype
+        - curl
+        - dom
+        - fileinfo
+        - filter
+        - gd
+        - gettext
+        - icu
+        - imap
+        - ipc
+        - json
+        - mbregex
+        - mbstring
+        - mcrypt
+        - mhash
+        - mysql
+        - opcache
+        - pcntl
+        - pcre
+        - pdo
+        - pear
+        - phar
+        - posix
+        - readline
+        - soap
+        - sockets
+        - tokenizer
+        - xml
+        - zip
+    - Versions :
+        - 5.2.17
+        - 5.3.29
+        - 5.4.45
+        - 5.5.38
+        - 5.6.34
+        - 7.0.28 +openssl
+        - 7.1.15 +openssl
+        - 7.2.3 +openssl
+- PHPunit
+    - 3.6 for PHP version 5.2
+    - 4 for PHP version 5.3-5.5
+    - 5 for PHP version 5.6
+    - 6 for PHP version 7.0
+    - 7 for PHP version 7.1-7.2
+- nodejs : v8.10.0
+- npm : v5.6.0
+- sass : v3.4.23
+- mysql: 10.1.26-MariaDB
+- phpunit-multi script
+    - phpunit-multi 5.3,5.4,5.6 [args]
+    - phpunit-multi 5.2,5.3,5.4,5.5,5.6,7.0,7.1,7.2 -c tests/phpunit.xml
+- WP CLI [as root, add `--allow-root`]
+- Composer
+- PHP Parallel Lint <https://github.com/JakubOnderka/PHP-Parallel-Lint/> v1.0.0 : parallel `php -l`
+- phplint-multi script
+    - min php version 5.3
+    - phplint-multi 5.3,5.4,5.6 [args]
+    - phplint-multi 5.3,5.4,5.5,5.6,7.0,7.1,7.2 . --blame
+phpcs
