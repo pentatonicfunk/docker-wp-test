@@ -84,12 +84,13 @@ RUN phpbrew install --patch $HOME/php5.2.17.node.patch 5.2.17 \
     -- --with-mysqli=/usr/bin/mysql_config \
     --with-mysql=/usr/bin/mysql_config \
     --with-pdo-mysql=/usr/bin/mysql_config \
-    --enable-spl
+    --enable-spl && \
+    rm -rf $HOME/.phpbrew/build/*
 
 ENV PHP_52_PATH="/root/.phpbrew/php/php-5.2.17"
-RUN cd $PHP_52_PATH/lib/php
+RUN cd $PHP_52_PATH/lib/php && \
     # dependencies
-RUN git clone --depth=1 --branch=1.1   git://github.com/sebastianbergmann/dbunit.git && \
+    git clone --depth=1 --branch=1.1   git://github.com/sebastianbergmann/dbunit.git && \
     git clone --depth=1 --branch=1.1   git://github.com/sebastianbergmann/php-code-coverage.git && \
     git clone --depth=1 --branch=1.3.2 git://github.com/sebastianbergmann/php-file-iterator.git && \
     git clone --depth=1 --branch=1.1.1 git://github.com/sebastianbergmann/php-invoker.git && \
@@ -98,17 +99,15 @@ RUN git clone --depth=1 --branch=1.1   git://github.com/sebastianbergmann/dbunit
     git clone --depth=1 --branch=1.1.4 git://github.com/sebastianbergmann/php-token-stream.git && \
     git clone --depth=1 --branch=1.1   git://github.com/sebastianbergmann/phpunit-mock-objects.git && \
     git clone --depth=1 --branch=1.1   git://github.com/sebastianbergmann/phpunit-selenium.git && \
-    git clone --depth=1 --branch=1.0.0 git://github.com/sebastianbergmann/phpunit-story.git
-
-# and the version of phpunit that we expect to run with php 5.2
-RUN git clone --depth=1 --branch=3.6   git://github.com/sebastianbergmann/phpunit.git
-
-# fix up the version number of phpunit
-RUN sed -i 's/@package_version@/3.6-git/g' phpunit/PHPUnit/Runner/Version.php
+    git clone --depth=1 --branch=1.0.0 git://github.com/sebastianbergmann/phpunit-story.git  && \
+    # and the version of phpunit that we expect to run with php 5.2
+    git clone --depth=1 --branch=3.6   git://github.com/sebastianbergmann/phpunit.git  && \
+    # fix up the version number of phpunit
+    sed -i 's/@package_version@/3.6-git/g' phpunit/PHPUnit/Runner/Version.php
 
 # now set up an ini file that adds all of the above to include_path for the PHP5.2 install
-RUN mkdir -p ${PHP_52_PATH}/var/db
-RUN echo "include_path=.:${PHP_52_PATH}/lib/php:${PHP_52_PATH}/lib/php/dbunit:${PHP_52_PATH}/lib/php/php-code-coverage:${PHP_52_PATH}/lib/php/php-file-iterator:${PHP_52_PATH}/lib/php/php-invoker:${PHP_52_PATH}/lib/php/php-text-template:${PHP_52_PATH}/lib/php/php-timer:${PHP_52_PATH}/lib/php/php-token-stream:${PHP_52_PATH}/lib/php/phpunit-mock-objects:${PHP_52_PATH}/lib/php/phpunit-selenium:${PHP_52_PATH}/lib/php/phpunit-story:${PHP_52_PATH}/lib/php/phpunit" > ${PHP_52_PATH}/var/db/path.ini
+RUN mkdir -p ${PHP_52_PATH}/var/db && \
+    echo "include_path=.:${PHP_52_PATH}/lib/php:${PHP_52_PATH}/lib/php/dbunit:${PHP_52_PATH}/lib/php/php-code-coverage:${PHP_52_PATH}/lib/php/php-file-iterator:${PHP_52_PATH}/lib/php/php-invoker:${PHP_52_PATH}/lib/php/php-text-template:${PHP_52_PATH}/lib/php/php-timer:${PHP_52_PATH}/lib/php/php-token-stream:${PHP_52_PATH}/lib/php/phpunit-mock-objects:${PHP_52_PATH}/lib/php/phpunit-selenium:${PHP_52_PATH}/lib/php/phpunit-story:${PHP_52_PATH}/lib/php/phpunit" > ${PHP_52_PATH}/var/db/path.ini
 
 RUN phpbrew install 5.3.29 \
     +bcmath +bz2 +calendar \
@@ -119,7 +118,8 @@ RUN phpbrew install 5.3.29 \
     +mcrypt +mhash +mysql \
     +opcache +pcntl +pcre \
     +pdo +pear +phar +posix +readline +soap \
-    +sockets +tokenizer +xml +zip
+    +sockets +tokenizer +xml +zip && \
+    rm -rf $HOME/.phpbrew/build/*
 
 RUN phpbrew install 5.4.45 \
     +bcmath +bz2 +calendar \
@@ -130,7 +130,8 @@ RUN phpbrew install 5.4.45 \
     +mcrypt +mhash +mysql \
     +opcache +pcntl +pcre \
     +pdo +pear +phar +posix +readline +soap \
-    +sockets +tokenizer +xml +zip
+    +sockets +tokenizer +xml +zip && \
+    rm -rf $HOME/.phpbrew/build/*
 
 RUN phpbrew install 5.5.38 \
     +bcmath +bz2 +calendar \
@@ -141,11 +142,13 @@ RUN phpbrew install 5.5.38 \
     +mcrypt +mhash +mysql \
     +opcache +pcntl +pcre \
     +pdo +pear +phar +posix +readline +soap \
-    +sockets +tokenizer +xml +zip
+    +sockets +tokenizer +xml +zip && \
+    rm -rf $HOME/.phpbrew/build/*
 
 #phpunit-4 PHP 5.3, PHP 5.4, or PHP 5.5
-RUN wget -O phpunit-4 https://phar.phpunit.de/phpunit-4.phar
-RUN chmod +x phpunit-4
+RUN cd $HOME && \
+    wget -O phpunit-4 https://phar.phpunit.de/phpunit-4.phar && \
+    chmod +x phpunit-4
 
 RUN phpbrew install 5.6.34 \
     +bcmath +bz2 +calendar \
@@ -156,11 +159,13 @@ RUN phpbrew install 5.6.34 \
     +mcrypt +mhash +mysql \
     +opcache +pcntl +pcre \
     +pdo +pear +phar +posix +readline +soap \
-    +sockets +tokenizer +xml +zip
+    +sockets +tokenizer +xml +zip && \
+    rm -rf $HOME/.phpbrew/build/*
 
 #phpunit-5 PHP 5.6
-RUN wget -O phpunit-5 https://phar.phpunit.de/phpunit-5.phar
-RUN chmod +x phpunit-5
+RUN cd $HOME && \
+    wget -O phpunit-5 https://phar.phpunit.de/phpunit-5.phar && \
+    chmod +x phpunit-5
 
 RUN phpbrew install 7.0.28 \
     +bcmath +bz2 +calendar \
@@ -171,11 +176,13 @@ RUN phpbrew install 7.0.28 \
     +mcrypt +mhash +mysql \
     +opcache +pcntl +pcre \
     +pdo +pear +phar +posix +readline +soap \
-    +sockets +tokenizer +xml +zip +openssl
+    +sockets +tokenizer +xml +zip +openssl && \
+    rm -rf $HOME/.phpbrew/build/*
 
 #phpunit-6 PHP 7.0
-RUN wget -O phpunit-6 https://phar.phpunit.de/phpunit-6.phar
-RUN chmod +x phpunit-6
+RUN cd $HOME && \
+    wget -O phpunit-6 https://phar.phpunit.de/phpunit-6.5.7.phar && \
+    chmod +x phpunit-6
 
 RUN phpbrew install 7.1.15 \
     +bcmath +bz2 +calendar \
@@ -186,7 +193,8 @@ RUN phpbrew install 7.1.15 \
     +mcrypt +mhash +mysql \
     +opcache +pcntl +pcre \
     +pdo +pear +phar +posix +readline +soap \
-    +sockets +tokenizer +xml +zip +openssl
+    +sockets +tokenizer +xml +zip +openssl && \
+    rm -rf $HOME/.phpbrew/build/*
 
 RUN free -mh
 RUN phpbrew install 7.2.3 \
@@ -198,30 +206,17 @@ RUN phpbrew install 7.2.3 \
     +mcrypt +mhash +mysql \
     +opcache +pcntl +pcre \
     +pdo +pear +phar +posix +readline +soap \
-    +sockets +tokenizer +xml +zip +openssl
+    +sockets +tokenizer +xml +zip +openssl && \
+    rm -rf $HOME/.phpbrew/build/*
 
 #phpunit-7 PHP 7.1, 7.2 (just install, wp tests include not support this yet)
-RUN wget -O phpunit-7 https://phar.phpunit.de/phpunit-7.phar
-RUN chmod +x phpunit-7
+RUN cd $HOME && \
+    wget -O phpunit-7 https://phar.phpunit.de/phpunit-7.phar && \
+    chmod +x phpunit-7
 
-RUN rm -rf $HOME/.phpbrew/build/*
+#RUN rm -rf $HOME/.phpbrew/build/*
 
-#reset mysql password
-COPY scripts/reset_mysql.sql /root/reset_mysql.sql
-RUN service mysql start && \
-    mysql -u root < $HOME/reset_mysql.sql
-
-#phpunit-multi script
-COPY scripts/phpunit-multi.sh /root/phpunit-multi.sh
-RUN chmod +x $HOME/phpunit-multi.sh && \
-    mv $HOME/phpunit-multi.sh /usr/local/bin/phpunit-multi
-
-#RUN phpbrew list
-#RUN phpbrew list
-#RUN ls -al $HOME/.phpbrew/php/php-5.5.38/bin
-#RUN phpbrew switch "7.1.15"
-#RUN which php
-
+# replac bash
 RUN mv /bin/sh /bin/sh.bak && ln -s /bin/bash /bin/sh
 
 RUN phpbrew init && \
@@ -243,17 +238,18 @@ RUN phpbrew init && \
     ln -s /usr/share/php-parallel-lint/parallel-lint /usr/local/bin/php-parallel-lint && \
     composer clear-cache
 
-#phplint-multi script
-COPY scripts/phplint-multi.sh /root/phplint-multi.sh
-RUN chmod +x $HOME/phplint-multi.sh
-RUN mv $HOME/phplint-multi.sh /usr/local/bin/phplint-multi
+#reset mysql password
+COPY scripts/reset_mysql.sql /root/reset_mysql.sql
+RUN service mysql start && \
+    mysql -u root < $HOME/reset_mysql.sql
 
-RUN phpbrew init && \
-    source /root/.phpbrew/bashrc && \
-    phpbrew switch 7.0.28 && \
-    php --version
+#phpunit-multi script
+COPY scripts/phpunit-multi.sh /root/phpunit-multi.sh
+RUN chmod +x $HOME/phpunit-multi.sh && \
+    mv $HOME/phpunit-multi.sh /usr/local/bin/phpunit-multi
 
-# return bash
+# restore bash
 RUN rm /bin/sh && mv /bin/sh.bak /bin/sh
 
-CMD ["/bin/bash"]
+COPY phpbrew-entrypoint.sh /root/phpbrew-entrypoint.sh
+ENTRYPOINT ["/root/phpbrew-entrypoint.sh"]
